@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+body,
+html {
+  font-family: "Montserrat", sans-serif;
+  scrollbar-width: none;
+  transition: background  300ms ease-in-out , color 600ms ease-in-out;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+li a.active {
+  color: #5e0202;
+  font-weight: 700;
+}
+li {
+  list-style: none;
+}
+li a {
+  font-weight: 400;
+}
+
+span:hover .yellow{
+  color: rgb(255, 238, 0);
+}
+
+.slsBox:hover .mysls{
+  color: rgb(255, 238, 0);
+  
+}
+.scial a{
+  background: rgb(16, 34, 6);
+  padding: 7px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover{
+    background: #ffffff;
+  }
+}
+.cannot{
+  pointer-events: none;
+  cursor: not-allowed;
+  background: rgba(114, 114, 114, 0.836);
+}
+.my-masonry-grid {
+  display: flex;
+  margin-left: -16px; /* gutter size offset */
+  width: auto;
+}
+.my-masonry-grid_column {
+  padding-left: 16px; /* gutter size */
+  background-clip: padding-box;
+}
+.my-masonry-grid_column > img {
+  margin-bottom: 16px;
+}

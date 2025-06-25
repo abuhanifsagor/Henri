@@ -1,0 +1,113 @@
+import React, { useState, useEffect } from "react";
+import EventCard from "../../components/EventCard/EventCard";
+import { Helmet } from "react-helmet";
+import { FaSearch } from "react-icons/fa";
+
+const BrowseAllFoods = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [foods, setFoods] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Fetch foods from API with optional search query
+  useEffect(() => {
+    const fetchFoods = async () => {
+      setLoading(true);
+      try {
+        const query = searchTerm
+          ? `?search=${encodeURIComponent(searchTerm)}`
+          : "";
+        const res = await fetch(
+          `https://henri-server.vercel.app/allFoods${query}`
+        );
+        const data = await res.json();
+        setFoods(data);
+      } catch (error) {
+        console.error("Error fetching foods:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounceTimeout = setTimeout(() => {
+      fetchFoods();
+    }, 300);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [searchTerm]);
+
+  return (
+    <div className="min-h-screen container mx-auto mt-18">
+      <Helmet>
+        <title>Henri - All Foods</title>
+      </Helmet>
+
+      {/* Hero section */}
+      <div className="relative rounded-4xl overflow-hidden">
+        <div className="absolute inset-0 bg-black opacity-30"></div>
+        <div
+          className="h-48 flex items-center justify-center text-white text-5xl font-bold bg-cover bg-no-repeat bg-center"
+          style={{
+            backgroundImage:
+              "url('https://img.freepik.com/premium-photo/sushi-bar-menu-set-colored-delicious-sushi-rolls-black-plates-top-view_187166-52539.jpg?semt=ais_hybrid&w=740')",
+          }}
+        >
+          <span className="relative z-20">
+            All Foods
+            <img
+              src="https://i.ibb.co/1461HXV/image.png"
+              alt=""
+              className="w-20 -scale-100 absolute top-1 -right-10 -z-10"
+            />
+          </span>
+        </div>
+      </div>
+
+      {/* Header & Animated Search */}
+      <div className="flex flex-row items-center justify-between my-6 px-4">
+        <span className="text-2xl font-extrabold md:text-3xl p-4 hover:border-red-600 border-b-2 duration-600 border-primary rounded-l-full">
+          Menu
+        </span>
+
+        {/* Animated Search Input */}
+        <div
+          className={`transition-all duration-500 ease-in-out border-2 border-base-300 shadow-md bg-white rounded-full overflow-hidden relative ${
+            isFocused || searchTerm ? "w-72" : "w-14"
+          } h-14 flex items-center`}
+          onClick={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        >
+          <input
+            type="text"
+            placeholder="Search foods..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={`transition-all duration-500 ease-in-out outline-none px-4 text-md font-bold text-gray-700 bg-transparent w-full ${
+              isFocused || searchTerm ? "opacity-100" : "opacity-0"
+            }`}
+          />
+          <FaSearch color="#8c52ff" className=" absolute right-3.5 text-2xl " />
+        </div>
+
+        <span className="text-2xl font-extrabold md:text-3xl p-2 px-3 hover:border-red-600 border-2 duration-600 border-primary rounded-full">
+          {foods.length}
+        </span>
+      </div>
+
+      {/* Food List */}
+      {loading ? (
+        <div className="flex justify-center py-10">
+          <button className="btn btn-primary loading">Loading...</button>
+        </div>
+      ) : (
+        <div className="grid mt-10 pb-20 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {foods.map((food) => (
+            <EventCard key={food._id} event={food} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default BrowseAllFoods;
