@@ -26,7 +26,7 @@ const OrderPages = () => {
       orderFoodPhotoURL: orderFood.photoURL,
       orderCategory: form.orderCategory.value,
       orderFoodprice: parseFloat(form.orderFoodprice.value),
-      description: form.orderDescription.value,
+      // description: form.orderDescription.value,
       availableQuantity,
       orderQuantity,
       sellerName: form.sellerName.value,
@@ -127,7 +127,7 @@ const OrderPages = () => {
           </label>
         </div>
 
-        <label className="floating-label block">
+        {/* <label className="floating-label block">
           <span className="font-bold">Description</span>
           <textarea
             name="orderDescription"
@@ -142,7 +142,7 @@ const OrderPages = () => {
                 : ""
             }
           />
-        </label>
+        </label> */}
 
         <div className="grid grid-cols-2 gap-4">
           <label className="floating-label block">

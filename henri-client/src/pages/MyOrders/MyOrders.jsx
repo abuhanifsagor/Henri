@@ -106,7 +106,7 @@ const MyOrders = () => {
                 </li>
 
                 {myOrders.map((order) => (
-                  <li key={order._id} className="list-row">
+                  <li key={order._id} className="list-row ">
                     <Link title="View Food" to={`/foods/${order.orderFoodId}`}>
                       <div>
                         <img
@@ -122,18 +122,17 @@ const MyOrders = () => {
                         title="View Food"
                         to={`/foods/${order.orderFoodId}`}
                       >
-                        <div>{order?.foodName}</div>
+                        <div>{order?.orderFoodName}</div>
                         <div className="text-xs flex flex-col md:flex-row uppercase font-semibold gap-3 opacity-60">
-                          {order?.category}
+                          {order?.orderCategory}
                           <span>Quantity: {order?.orderQuantity || 1}</span>
                           <span>Price: ${order?.orderFoodprice}</span>
                           <span>Date: {formatDate(order?.Date)}</span>
                         </div>
                       </Link>
-                      <br />
-                      <p className="max-w-sm text-xs opacity-60 font-semibold">
-                        Discription: {order?.description.slice(0, 50)}
-                      </p>
+                      {/* <p className="max-w-sm text-xs opacity-60 font-semibold">
+                        Discription: {order?.description?.slice(0, 50)}
+                      </p> */}
                     </div>
 
                     <div className="flex flex-col gap-2">
