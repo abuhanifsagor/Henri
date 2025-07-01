@@ -13,7 +13,7 @@ import { Link } from "react-router";
 const Banner = () => {
   return (
     <div className="z-30 relative">
-      <div className="h-[90vh]  w-full overflow-hidden">
+      <div className="h-[80vh]  w-full overflow-hidden">
         <Swiper
           spaceBetween={0}
           slidesPerView={1}
