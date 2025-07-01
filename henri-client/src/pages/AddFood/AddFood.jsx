@@ -67,7 +67,7 @@ const AddFood = () => {
           Add Your Foods to - <b className="text-[#C63814]">Henri</b>
         </h1>
         <div className="mt-8 pb-5    ">
-          <div className="max-w-3xl  border border-gray-200 mx-auto py-10 p-4 md:p-8">
+          <div className="max-w-3xl  border rounded-2xl border-base-300  mx-auto py-10 p-4 md:p-8">
             <h2 className="text-3xl font-bold mb-6 text-center">
               Add Foods Menu
             </h2>
