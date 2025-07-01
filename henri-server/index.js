@@ -83,26 +83,43 @@ async function run() {
       }
     });
     // get all  food
-    app.get("/allFoods", async (req, res) => {
-      try {
-        const { search } = req.query;
+    // get all food with search and sorting
+app.get("/allFoods", async (req, res) => {
+  try {
+    const { search, sortBy } = req.query;
 
-        let query = {};
-        if (search) {
-          query = {
-            foodName: { $regex: search, $options: "i" },
-          };
-        }
+    let query = {};
+    if (search) {
+      query.foodName = { $regex: search, $options: "i" };
+    }
 
-        const result = await foodsCollection
-          .find(query)
-          .sort({ sells: -1 })
-          .toArray();
-        res.send(result);
-      } catch (error) {
-        res.status(500).send({ error: "Failed to fetch foods" });
-      }
-    });
+    // Set sorting options based on query param
+    let sortOption = {};
+    switch (sortBy) {
+      case "price-asc":
+        sortOption = { price: 1 };
+        break;
+      case "price-desc":
+        sortOption = { price: -1 };
+        break;
+      case "name-asc":
+        sortOption = { foodName: 1 };
+        break;
+      case "name-desc":
+        sortOption = { foodName: -1 };
+        break;
+      default:
+        sortOption = { sells: -1 }; // default: most sold
+    }
+
+    const result = await foodsCollection.find(query).sort(sortOption).toArray();
+    res.send(result);
+  } catch (error) {
+    console.error("Error fetching foods:", error);
+    res.status(500).send({ error: "Failed to fetch foods" });
+  }
+});
+
 
     // add task
     app.post("/addFood", verifyJWT, async (req, res) => {

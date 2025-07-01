@@ -8,17 +8,18 @@ const BrowseAllFoods = () => {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [sortBy, setSortBy] = useState(""); // NEW: sort state
 
-  // Fetch foods from API with optional search query
   useEffect(() => {
     const fetchFoods = async () => {
       setLoading(true);
       try {
-        const query = searchTerm
-          ? `?search=${encodeURIComponent(searchTerm)}`
-          : "";
+        const queryParams = new URLSearchParams();
+        if (searchTerm) queryParams.append("search", searchTerm);
+        if (sortBy) queryParams.append("sortBy", sortBy);
+
         const res = await fetch(
-          `https://henri-server.vercel.app/allFoods${query}`
+          `https://henri-server.vercel.app/allFoods?${queryParams.toString()}`
         );
         const data = await res.json();
         setFoods(data);
@@ -34,7 +35,7 @@ const BrowseAllFoods = () => {
     }, 300);
 
     return () => clearTimeout(debounceTimeout);
-  }, [searchTerm]);
+  }, [searchTerm, sortBy]); // add sortBy to dependency
 
   return (
     <div className="min-h-screen container mx-auto mt-18">
@@ -63,16 +64,16 @@ const BrowseAllFoods = () => {
         </div>
       </div>
 
-      {/* Header & Animated Search */}
-      <div className="flex flex-row items-center justify-between my-6 px-4">
+      {/* Header & Search & Sort */}
+      <div className="flex flex-wrap md:flex-row items-center justify-between my-6 px-4 gap-4">
         <span className="text-2xl font-extrabold md:text-3xl p-4 hover:border-red-600 border-b-2 duration-600 border-primary rounded-l-full">
           Menu
         </span>
 
-        {/* Animated Search Input */}
+        {/* Search Box */}
         <div
-          className={`transition-all duration-500 ease-in-out border-2 border-base-300 shadow-md bg-white rounded-full overflow-hidden relative ${
-            isFocused || searchTerm ? "w-72" : "w-14"
+          className={`transition-all duration-500 ease-in-out border-2 border-base-300 shadow-md bg-white md:mx-auto rounded-full overflow-hidden relative ${
+            isFocused || searchTerm ? "w-52 md:w-72" : "w-14"
           } h-14 flex items-center`}
           onClick={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -89,7 +90,20 @@ const BrowseAllFoods = () => {
           <FaSearch color="#8c52ff" className=" absolute right-3.5 text-2xl " />
         </div>
 
-        <span className="text-2xl font-extrabold md:text-3xl p-2 px-3 hover:border-red-600 border-2 duration-600 border-primary rounded-full">
+        {/* Sorting Dropdown */}
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="select select-bordered rounded-full w-full lg:w-30 lg:mx-0  md:w-40 mx-auto text-center border-primary text-md  font-semibold"
+        >
+          <option value="">Default</option>
+          <option value="name-asc">Name A-Z</option>
+          <option value="name-desc">Name Z-A</option>
+          <option value="price-asc">Price Low to High</option>
+          <option value="price-desc">Price High to Low</option>
+        </select>
+
+        <span className="text-2xl hidden md:block font-extrabold md:text-3xl p-2 px-3 hover:border-red-600 border-2 duration-600 border-primary rounded-full">
           {foods.length}
         </span>
       </div>
@@ -100,7 +114,7 @@ const BrowseAllFoods = () => {
           <button className="btn btn-primary loading">Loading...</button>
         </div>
       ) : (
-        <div className="grid mt-10 pb-20 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid mt-10 pb-20 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
           {foods.map((food) => (
             <EventCard key={food._id} event={food} />
           ))}
